@@ -22,21 +22,36 @@ Drawings are generated as vectors, not images, so lessons appear in seconds, sca
 
 ## Run it
 
-Deployed on Cloudflare Pages with Pages Functions.
+Deployed on Cloudflare Pages with Pages Functions. Requires Node 20+.
 
 ```bash
 npm i -g wrangler
 echo 'MODEL_API_KEY=your_meta_key' > .dev.vars
-wrangler pages dev
+npm run dev      # local server with the API routes
+npm test         # unit and API tests (Meta's API is faked; no key needed)
 ```
 
 Environment variables: `MODEL_API_KEY` (required), `META_MODEL` (default `muse-spark-1.3`), `SAM_MODEL` (default `sam-3.1`), `META_API_BASE` (default `https://api.meta.ai/v1`).
 
 Without a key, the **Sample lesson** button plays a built-in lesson so the interface can be tried offline.
 
-## Structure
+## Project structure
 
 ```
-public/            static site (index.html, app.js, app.css, sample.js)
-functions/api/     plan.js, draw.js, photo.js — calls to Meta Model API
+functions/api/   HTTP routes: plan.js, draw.js, photo.js (thin handlers)
+lib/             server logic: meta.js (Muse Spark + SAM 3.1 client), prompts.js, geometry.js, http.js
+public/          the app: index.html, styles.css
+public/js/       main.js (wiring), lesson.js (player), ink.js (SVG sanitising + pen animation),
+                 voice.js (narration), api.js (requests, photo resizing), sample.js (offline lesson)
+test/            node:test suites for the library and every API route
 ```
+
+No build step and no runtime dependencies.
+
+## Built during the hackathon
+
+Everything in this repository was written during the Meta Global AI Developer Hackathon, starting October 28, 2026; the commit history is the record. The idea grew out of the author's earlier work turning topics into illustrated explainer videos, but no code from that project is used here.
+
+## License
+
+[MIT](LICENSE)

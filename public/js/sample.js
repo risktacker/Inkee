@@ -1,5 +1,5 @@
 // A hand-drawn sample lesson so Inkee can be tried with no network or API key.
-window.INKEE_SAMPLE = {
+export const SAMPLE_LESSON = {
   title: "Why a big front gear makes you faster",
   steps: [
     {

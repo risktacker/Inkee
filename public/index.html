@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Caveat:wght@500;700&display=swap">
-<link rel="stylesheet" href="/app.css">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Cpath d=%22M16 3 L24 15 L16 29 L8 15 Z%22 fill=%22none%22 stroke=%22%23b48a2a%22 stroke-width=%222.5%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E">
 </head>
 <body>
 <header class="top">
@@ -25,17 +26,17 @@
     <p class="lead">Type a question or take a photo. Inkee explains it in a few steps, drawing each one while it talks you through it.</p>
 
     <div class="modes" role="tablist">
-      <button class="mode active" data-mode="type" role="tab" aria-selected="true">Ask a question</button>
-      <button class="mode" data-mode="photo" role="tab" aria-selected="false">Explain a photo</button>
+      <button class="mode active" data-mode="question" type="button" role="tab" aria-selected="true">Ask a question</button>
+      <button class="mode" data-mode="photo" type="button" role="tab" aria-selected="false">Explain a photo</button>
     </div>
 
-    <form id="askForm" class="panel" data-panel="type">
+    <form id="askForm" class="panel" data-panel="question">
       <label for="question" class="sr">Your question</label>
       <input id="question" name="question" type="text" autocomplete="off" maxlength="300" placeholder="Why does a big front gear make a bicycle faster?">
       <button class="go" type="submit">Draw it</button>
     </form>
 
-    <div class="panel hidden" data-panel="photo">
+    <div class="panel" data-panel="photo" hidden>
       <label class="drop" for="photo">
         <input id="photo" type="file" accept="image/*" capture="environment">
         <span><b>Take or choose a photo</b> of a machine, a plant, a tool, anything. Inkee outlines its parts and explains them.</span>
@@ -45,35 +46,34 @@
 
     <div class="try">
       <span>Try:</span>
-      <button class="chip" data-q="Explain the third law of thermodynamics">Third law of thermodynamics</button>
-      <button class="chip" data-q="How does a transistor work?">How a transistor works</button>
-      <button class="chip" data-q="How does a rainbow form?">How a rainbow forms</button>
-      <button class="chip sample" data-sample="1">Sample lesson (no network)</button>
+      <button class="chip" type="button" data-q="Explain the third law of thermodynamics">Third law of thermodynamics</button>
+      <button class="chip" type="button" data-q="How does a transistor work?">How a transistor works</button>
+      <button class="chip" type="button" data-q="How does a rainbow form?">How a rainbow forms</button>
+      <button class="chip sample" id="sample" type="button">Sample lesson (no network)</button>
     </div>
   </section>
 
-  <section id="lesson" class="lesson hidden" aria-live="polite">
+  <section id="lesson" class="lesson" aria-live="polite" hidden>
     <div class="lesson-head">
-      <button class="back" id="back" aria-label="Ask something else">←</button>
+      <button class="back" id="back" type="button" aria-label="Ask something else">←</button>
       <h2 id="lessonTitle"></h2>
-      <button class="voice" id="voiceBtn" aria-pressed="true" title="Narration on/off">🔊</button>
+      <button class="voice" id="voiceBtn" type="button" aria-pressed="true" title="Narration on/off">🔊</button>
     </div>
     <div id="stage" class="stage"></div>
     <div class="controls">
-      <button id="prev" class="ctl">Back</button>
+      <button id="prev" class="ctl" type="button">Back</button>
       <span id="counter" class="counter"></span>
-      <button id="next" class="ctl primary">Next</button>
+      <button id="next" class="ctl primary" type="button">Next</button>
     </div>
     <ol id="steps" class="steps"></ol>
   </section>
 
-  <p id="status" class="status hidden" role="status"></p>
+  <p id="status" class="status" role="status" hidden></p>
 </main>
 
 <footer class="foot">
   Built for the Meta Global AI Developer Hackathon with Muse Spark. A <a href="https://golidee.com" target="_blank" rel="noopener">GOLIDE</a> project.
 </footer>
-<script src="/sample.js"></script>
-<script src="/app.js"></script>
+<script type="module" src="/js/main.js"></script>
 </body>
 </html>
