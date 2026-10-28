@@ -14,17 +14,15 @@ export function json(data, status = 200) {
 export async function chat(env, messages, { maxTokens = 2000, effort = "low" } = {}) {
   const key = env.MODEL_API_KEY;
   if (!key) throw new Error("MODEL_API_KEY is not set");
-  const res = await fetch(`${env.META_API_BASE || META_BASE}/chat/completions`, {
+  const base = { model: env.META_MODEL || MODEL, messages, max_tokens: maxTokens };
+  const send = body => fetch(`${env.META_API_BASE || META_BASE}/chat/completions`, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
-    body: JSON.stringify({
-      model: env.META_MODEL || MODEL,
-      messages,
-      max_tokens: maxTokens,
-      reasoning_effort: effort,
-      response_format: { type: "json_object" },
-    }),
+    body: JSON.stringify(body),
   });
+  let res = await send({ ...base, reasoning_effort: effort, response_format: { type: "json_object" } });
+  // If the optional fields are rejected, retry with the plain request.
+  if (res.status === 400) res = await send(base);
   if (!res.ok) {
     const detail = (await res.text()).slice(0, 400);
     throw new Error(`Meta API ${res.status}: ${detail}`);
@@ -32,6 +30,33 @@ export async function chat(env, messages, { maxTokens = 2000, effort = "low" } =
   const data = await res.json();
   const text = data?.choices?.[0]?.message?.content ?? "";
   return parseJson(text);
+}
+
+// SAM 3.1 through the Responses API: a short noun phrase + an image in,
+// boxes out as text like 1<|box;x1=..;y1=..;x2=..;y2=..;w=..;h=..|>
+const BOX = /(\d+)<\|box;x1=(\d+);y1=(\d+);x2=(\d+);y2=(\d+);w=(\d+);h=(\d+)\|>/g;
+export async function segment(env, image, phrase) {
+  const res = await fetch(`${env.META_API_BASE || META_BASE}/responses`, {
+    method: "POST",
+    headers: { "content-type": "application/json", authorization: `Bearer ${env.MODEL_API_KEY}` },
+    body: JSON.stringify({
+      model: env.SAM_MODEL || "sam-3.1",
+      input: [{ role: "user", content: [
+        { type: "input_text", text: phrase },
+        { type: "input_image", image_url: image },
+      ] }],
+    }),
+  });
+  if (!res.ok) return [];
+  const data = await res.json();
+  let text = data.output_text || "";
+  if (!text && Array.isArray(data.output)) {
+    text = data.output.flatMap(o => (o.content || []).map(c => c.text || "")).join("\n");
+  }
+  return [...text.matchAll(BOX)].map(m => {
+    const [, ord, x1, y1, x2, y2, w, h] = m.map(Number);
+    return { ord, x1, y1, x2, y2, w, h };
+  });
 }
 
 export function parseJson(text) {

@@ -203,8 +203,8 @@ async function explainPhoto(file) {
   if (!file) return;
   status("Reading your photo…");
   try {
-    const image = await shrink(file, 1024);
-    const out = await post("/api/photo", { image });
+    const { image, width, height } = await shrink(file, 1024);
+    const out = await post("/api/photo", { image, width, height });
     if (out.refused) return status(out.reason || "Inkee only explains objects.", true);
     const steps = out.parts.map(p => ({ heading: p.name, narration: p.narration, box: p.box }));
     if (out.summary) steps.push({ heading: "How it works together", narration: out.summary, box: null });
@@ -226,7 +226,7 @@ function shrink(file, max) {
       const k = Math.min(1, max / Math.max(img.width, img.height));
       const c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
       c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-      URL.revokeObjectURL(url); resolve(c.toDataURL("image/jpeg", .85));
+      URL.revokeObjectURL(url); resolve({ image: c.toDataURL("image/jpeg", .85), width: c.width, height: c.height });
     };
     img.onerror = () => reject(new Error("That file isn't an image Inkee can read."));
     img.src = url;

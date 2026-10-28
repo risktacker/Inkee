@@ -14,7 +14,7 @@ Built solo by [Esiah Kapinga](https://github.com/risktacker) for the **Meta Glob
 | Draw | Each step is drawn as clean SVG line art, in parallel, while the first step is already playing | Muse Spark |
 | Ink in | The browser traces every stroke like a pen, timed to the narration | — |
 | Narrate | Each step is read aloud in sync with its drawing | Browser speech |
-| Photo mode | Muse Spark reads the photo, finds the object's parts and where they are, and Inkee outlines and explains each part | Muse Spark (vision) |
+| Photo mode | Muse Spark reads the photo and names the object's parts; SAM 3.1 then locates each part precisely, in parallel; Inkee outlines and narrates them | Muse Spark (vision) + SAM 3.1 |
 
 Drawings are generated as vectors, not images, so lessons appear in seconds, scale to any screen and need no storage.
 
@@ -30,7 +30,7 @@ echo 'MODEL_API_KEY=your_meta_key' > .dev.vars
 wrangler pages dev
 ```
 
-Environment variables: `MODEL_API_KEY` (required), `META_MODEL` (default `muse-spark-1.3`), `META_API_BASE` (default `https://api.meta.ai/v1`).
+Environment variables: `MODEL_API_KEY` (required), `META_MODEL` (default `muse-spark-1.3`), `SAM_MODEL` (default `sam-3.1`), `META_API_BASE` (default `https://api.meta.ai/v1`).
 
 Without a key, the **Sample lesson** button plays a built-in lesson so the interface can be tried offline.
 
