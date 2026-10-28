@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Inkee</title>
+<meta name="description" content="Ask anything, see it drawn. Inkee explains hard ideas as narrated, step-by-step drawings, built on Meta's Muse models.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Caveat:wght@500;700&display=swap">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/" aria-label="Inkee home">
+    <svg class="nib" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 L24 15 L16 29 L8 15 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="16" cy="15" r="2.4" fill="var(--gold)"/></svg>
+    <span>Inkee</span>
+  </a>
+  <span class="tag">Ask anything, see it drawn</span>
+</header>
+
+<main>
+  <section id="ask" class="ask">
+    <h1>Ask anything.<br><em>See it drawn.</em></h1>
+    <p class="lead">Type a question or take a photo. Inkee explains it in a few steps, drawing each one while it talks you through it.</p>
+
+    <div class="modes" role="tablist">
+      <button class="mode active" data-mode="type" role="tab" aria-selected="true">Ask a question</button>
+      <button class="mode" data-mode="photo" role="tab" aria-selected="false">Explain a photo</button>
+    </div>
+
+    <form id="askForm" class="panel" data-panel="type">
+      <label for="question" class="sr">Your question</label>
+      <input id="question" name="question" type="text" autocomplete="off" maxlength="300" placeholder="Why does a big front gear make a bicycle faster?">
+      <button class="go" type="submit">Draw it</button>
+    </form>
+
+    <div class="panel hidden" data-panel="photo">
+      <label class="drop" for="photo">
+        <input id="photo" type="file" accept="image/*" capture="environment">
+        <span><b>Take or choose a photo</b> of a machine, a plant, a tool, anything. Inkee outlines its parts and explains them.</span>
+      </label>
+      <p class="fine">Inkee explains objects only. It never identifies people.</p>
+    </div>
+
+    <div class="try">
+      <span>Try:</span>
+      <button class="chip" data-q="Explain the third law of thermodynamics">Third law of thermodynamics</button>
+      <button class="chip" data-q="How does a transistor work?">How a transistor works</button>
+      <button class="chip" data-q="How does a rainbow form?">How a rainbow forms</button>
+      <button class="chip sample" data-sample="1">Sample lesson (no network)</button>
+    </div>
+  </section>
+
+  <section id="lesson" class="lesson hidden" aria-live="polite">
+    <div class="lesson-head">
+      <button class="back" id="back" aria-label="Ask something else">←</button>
+      <h2 id="lessonTitle"></h2>
+      <button class="voice" id="voiceBtn" aria-pressed="true" title="Narration on/off">🔊</button>
+    </div>
+    <div id="stage" class="stage"></div>
+    <div class="controls">
+      <button id="prev" class="ctl">Back</button>
+      <span id="counter" class="counter"></span>
+      <button id="next" class="ctl primary">Next</button>
+    </div>
+    <ol id="steps" class="steps"></ol>
+  </section>
+
+  <p id="status" class="status hidden" role="status"></p>
+</main>
+
+<footer class="foot">
+  Built for the Meta Global AI Developer Hackathon with Muse Spark. A <a href="https://golidee.com" target="_blank" rel="noopener">GOLIDE</a> project.
+</footer>
+<script src="/sample.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
